@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>제목</th>
+                <th>작성일시</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="q: ${questionList}">
+                <td>
+                    <a th:href="@{|/detail/${q.id}|}" th:text="${q.subject}"></a>
+                </td>
+                <td th:text="${q.createDate}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/create}">질문등록</a> <!-- 퀴즈 옆의 앵커 링크를 누르면 question_form 기반의 페이지를 오픈하도록
+                 나머지 코드를 완성해주세요
+                 컨트롤러는 GunchimController를 이용해주세요-->
+</body>
+</html>
