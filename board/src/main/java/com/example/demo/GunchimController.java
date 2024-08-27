@@ -3,14 +3,17 @@ package com.example.demo;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -25,13 +28,13 @@ public class GunchimController {
 	}
 	
 	@GetMapping("/list")
-	public String list(Model model) {
+	public String list(Model model, @RequestParam(value="page", defaultValue="0") int page) {
 		// Model : 템플릿(HTML)에 전달할 내용을 넘겨주는 클래스.
 		//List<Question> qList = this.qr.findAll();
-		List<Question> qList = this.qr.getList();
+		Page<Question> paging = this.qr.getList(page);
 		// addAttribute : 템플릿에 전달할 객체를 지정하는 메서드
 		// 템플릿(HTML)에서 보게될 명칭, 넘길 객체 순으로 작성
-		model.addAttribute("questionList", qList);
+		model.addAttribute("paging", paging);
 		return "question_list";
 	}
 	
@@ -42,7 +45,7 @@ public class GunchimController {
 	// 출력 내용 : 제목(subject), 내용(content)
 	
 	@GetMapping(value = "/detail/{id}")
-	public String detail(Model model, @PathVariable("id") Integer id) 
+	public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) 
 			throws PpakchimException {
 		Question q = this.qr.getQuestion(id);
 		model.addAttribute("question",  q);
@@ -50,16 +53,20 @@ public class GunchimController {
 		
 	}
 	@GetMapping("/create")
-	public String questionCreate() {
+	public String questionCreate(QuestionForm questionForm) {
 
 		return "question_form";
 	}
 
 	
 	@PostMapping("/create")
-	public String questionCreate(@RequestParam(value="subject") String subject,
-											  @RequestParam(value="content") String content) {
-		this.qr.create(subject, content);
+	public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+		
+		if(bindingResult.hasErrors()) {
+			return "question_form";
+		}
+		
+		this.qr.create(questionForm.getSubject(), questionForm.getContent());
 		return "redirect:/list";
 	}
 	

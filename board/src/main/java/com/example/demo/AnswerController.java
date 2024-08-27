@@ -3,11 +3,13 @@ package com.example.demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/answer")
@@ -26,7 +28,8 @@ public class AnswerController {
 	
 	@PostMapping("/create/{id}")
 	public String createAnswer(Model model, @PathVariable("id") Integer id,
-			@RequestParam(value="content") String content) {
+			@RequestParam(value="content") String content,
+			@Valid AnswerForm answerForm, BindingResult bindingResult) {
 		// @PathVariable : 주소값(쿼리스트링값)을 받아올때 사용
 		//     - 주소의 변수값을 받아올때 사용
 		//     - 값을 무조건 하나만 받아올수 있음
@@ -34,12 +37,16 @@ public class AnswerController {
 		//     - 사용자가 입력한값을 받아올때 사용
 		try {
 			Question q1 = this.qService.getQuestion(id);
-			this.aService.create(q1, content);
+			if(bindingResult.hasErrors()) {
+				model.addAttribute("question", q1);
+				return "question_detail";
+			}
+			this.aService.create(q1, answerForm.getContent());
 		} catch (PpakchimException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return String.format("redirect:/detail/%s", id);
 		
 		

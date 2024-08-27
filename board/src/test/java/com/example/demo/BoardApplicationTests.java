@@ -13,30 +13,40 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class BoardApplicationTests {
 
+//	@Autowired
+//	private QuestionResponsitory qRepo;
+	
 	@Autowired
-	private QuestionResponsitory qRepo;
+	private QuestionService qService;
 	
 	@Test
 	void contextLoads() {
 		
-		Question q1 = new Question();
-		q1.setSubject("군침도는 메뉴 추천해주세요");
-		q1.setContent("저는 오이 알레르기가 있어요." + " 근데 오이향은 좋아해요.");
+		for(int i = 1; i <=300; i++) {
+			String subject = String.format("군침 쓰아악 : %03d", i);
+			String content = "족발 막국수를 생각하니 군침이 싹도노";
+			this.qService.create(subject, content);
+		}
 		
-		q1.setCreateDate(LocalDateTime.now());
-		this.qRepo.save(q1);
+		
+//		Question q1 = new Question();
+//		q1.setSubject("군침도는 메뉴 추천해주세요");
+//		q1.setContent("저는 오이 알레르기가 있어요." + " 근데 오이향은 좋아해요.");
+//		
+//		q1.setCreateDate(LocalDateTime.now());
+//		this.qRepo.save(q1);
 		
 		//제목은 : 감기조심하세요
 		// 내용은 : 요즘 독감이 유행하고 있습니다.
 		
 		// 저장날짜는 오늘로
 		
-		Question q2 = new Question();
-		q2.setSubject("감기조심하세요");
-		q2.setContent("요즘 독감이 유행하고 있습니다.");
-		
-		q2.setCreateDate(LocalDateTime.now());
-		this.qRepo.save(q2);
+//		Question q2 = new Question();
+//		q2.setSubject("감기조심하세요");
+//		q2.setContent("요즘 독감이 유행하고 있습니다.");
+//		
+//		q2.setCreateDate(LocalDateTime.now());
+//		this.qRepo.save(q2);
 		
 		// findAll : 데이터 전체조회.(해당 리파지토리에있는)
 //		List<Question> sel = this.qRepo.findAll();
