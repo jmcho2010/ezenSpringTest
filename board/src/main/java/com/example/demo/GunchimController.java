@@ -53,6 +53,7 @@ public class GunchimController {
 		
 	}
 	@GetMapping("/create")
+
 	public String questionCreate(QuestionForm questionForm) {
 
 		return "question_form";

@@ -17,6 +17,12 @@ public class UserController {
 	
 	private final UserService userService;
 
+	@GetMapping("/login")
+	public String login() {
+		return "login_form";
+	}
+
+	
 	// signup get/post 완성해오기
 	// 회원가입 진행이 되도록
 	// 참고사항 : questionForm
@@ -29,7 +35,7 @@ public class UserController {
 	
 	@PostMapping("/signup")
 	public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
-		
+
 		if(bindingResult.hasErrors()) {
 			return "signup_form";
 		}
